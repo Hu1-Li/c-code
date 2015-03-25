@@ -19,9 +19,11 @@ skip_list init()
     list->bottom = (skip_list_node *)malloc(sizeof(skip_list_node));
     list->bottom->down = NULL;
     list->bottom->right = NULL;
+    list->bottom->value = 0;
     list->top = (skip_list_node *)malloc(sizeof(skip_list_node));
     list->top->down = list->bottom;
     list->top->right = NULL;
+    list->top->value = 0;
     return *list;
 }
 
@@ -40,7 +42,7 @@ void insert(skip_list *list, int val)
     int lvl = rand_level();
     int max_level = list->level > lvl ? list->level : lvl;
     
-    skip_list_node **update = (skip_list_node **)malloc(lvl * sizeof(skip_list_node *));
+    skip_list_node **update = (skip_list_node **)malloc(max_level * sizeof(skip_list_node *));
 
     int index = list->level - 1;
     while (x != NULL) {
@@ -64,26 +66,26 @@ void insert(skip_list *list, int val)
         for (int i = list->level; i < lvl; i++) {
             skip_list_node *t = (skip_list_node *)malloc(sizeof(skip_list_node));
             t->right = NULL;
+            t->value = 0;
             t->down = list->top->down;
             list->top->down = t;
             update[i] = t;
         }
     }
     
-    skip_list_node *new_node[lvl];
+    skip_list_node *new_node = (skip_list_node *)malloc(sizeof(skip_list_node) * lvl);
     for (int i = 0; i < lvl; ++i) {
-        new_node[i] = (skip_list_node *)malloc(sizeof(skip_list_node));
-        new_node[i]->value = val;
-        new_node[i]->right = NULL;
+        new_node[i].value = val;
+        new_node[i].right = NULL;
         if (i == 0) {
-            new_node[i]->down = NULL;
+            new_node[i].down = NULL;
         } else {
-            new_node[i]->down = new_node[i - 1];
+            new_node[i].down = &new_node[i - 1];
         }
     }
     for (int i = 0; i < lvl; ++i) {
-        new_node[i]->right = update[i]->right;
-        update[i]->right = new_node[i];
+        new_node[i].right = update[i]->right;
+        update[i]->right = &new_node[i];
     }
     list->level = max_level;
     free(update);
