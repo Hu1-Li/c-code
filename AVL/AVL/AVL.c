@@ -7,11 +7,11 @@
 //
 
 #include "AVL.h"
-AVLTree init()
+AVLTree *init()
 {
     AVLTree *T = (AVLTree *)malloc(sizeof(AVLTree));
     T->root = NULL;
-    return *T;
+    return T;
 }
 
 AVLNode *new_node(int val)
@@ -173,6 +173,8 @@ void del(AVLTree *T, int val)
         //not found;
         return;
     }
+    //using the x->right(x->right->leftmost) or x->left to replace x;
+    //then delete x;
     if (x->right) {
         if (x->right->left) {
             n = x->right;
@@ -243,7 +245,8 @@ void del(AVLTree *T, int val)
                 leftRotate(p->left, T);
             }
             rightRotate(p, T);
-        } else if (balance_factor == -2) {
+        }
+        if (balance_factor == -2) {
             //it should never reach here.
             if (get_balance_factor(p->left) == 1) {
                 rightRotate(p, T);

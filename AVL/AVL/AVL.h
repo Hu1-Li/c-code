@@ -23,7 +23,7 @@ typedef struct AVLTree {
     struct AVLNode* root;
 } AVLTree;
 
-AVLTree init();
+AVLTree* init();
 void insert(AVLTree *T, int val);
 void del(AVLTree *T, int val);
 int find(AVLTree *T, int val);
