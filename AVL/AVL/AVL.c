@@ -85,7 +85,8 @@ void rightRotate(AVLNode *t, AVLTree *T)
     t->parent = s;
     
     t->height = calc_balance_factor(t);
-    s->height = calc_balance_factor(s);}
+    s->height = calc_balance_factor(s);
+}
 
 void insert(AVLTree *T, int val)
 {
